@@ -110,12 +110,14 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
   })
   .then(async res => {
     const $ = cheerio.load(await res.text());
-    const linknya = $('.calendar_event_attendance>div>a'); 
+    const linknya = $('.calendar_event_attendance>a'); 
     const link_absen = [];
+    const tgl = [];
 
     for(let i= 0; i < linknya.length ; i++){
       link_absen.push(linknya[i].attribs.href);
     }
+
     
     resolve(link_absen)
   })
@@ -236,9 +238,10 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         return link_absen.indexOf(item) == pos;
       });
       console.log(`[#] ketemu link absen : ${arr_unique.length}`);
+      console.log(arr_unique);
       
       const bisa_absen = [];
-      console.log(`[#] link bisa absen : ${bisa_absen.length}`);
+      
       if(link_absen.length === 0){
         continue ;
       }
@@ -249,6 +252,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         }
       }
 
+      console.log(`[#] link bisa absen : ${bisa_absen.length}`);
 
       if(bisa_absen.length === 0){
         console.log('');
