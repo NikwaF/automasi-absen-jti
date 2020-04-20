@@ -216,7 +216,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     if(line === ''){
       continue;
     }
-      const nim = `E4118${line}`;
+      const nim = `E4119${line}`;
       const pass = 'jtipolije';
       const cookie = await getCookieLoginPage();
       const moodleSession = cookie.cookie[0].split(';')[0];
