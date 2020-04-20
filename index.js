@@ -238,7 +238,6 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         return link_absen.indexOf(item) == pos;
       });
       console.log(`[#] ketemu link absen : ${arr_unique.length}`);
-      console.log(arr_unique);
       
       const bisa_absen = [];
       
@@ -258,7 +257,9 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         console.log('');
         continue ;
       }
-  
+      
+
+      console.log('[#] sedang mengabsen ...');
       for(let i = 0; i < bisa_absen.length ; i++){
         const bahan_absen = await page_absen(bisa_absen[i], moodleSession2);
         const data = {
