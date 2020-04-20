@@ -212,7 +212,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       const logins = await login(nim,pass,moodleSession,token);
   
       if(logins.cookie === undefined){
-        console.log(`[#] ${nim} login gagal`);
+        console.log(`[#] ${nim} login gagal\n`);
         continue;
       }
       
@@ -231,7 +231,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       const bisa_absen = [];
       
       if(arr_unique.length === 0){
-        console.log('');
+        console.log('\n');
         continue ;
       }
       for(let i = 0; i <= arr_unique.length -1 ; i++){
@@ -244,7 +244,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       console.log(`[#] link bisa absen : ${bisa_absen.length}`);
 
       if(bisa_absen.length === 0){
-        console.log('');
+        console.log('\n');
         continue ;
       }
 
@@ -266,7 +266,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
           console.log(`[#] ${seskey.nama} gagal Absen`);
         }
       }
-      console.log('');
+      console.log('\n');
 
   }
 })();
