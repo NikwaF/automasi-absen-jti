@@ -63,17 +63,6 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
   .catch(err => reject(err))
  });
 
-
- const headers = (cookie) => {
-   const hr = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Cookie': cookie
-   };
-
-   return hr;
- };
-
  const pageMy = (cookie) => new Promise((resolve, reject) => {
   fetch('http://jti.polije.ac.id/elearning/my/', {
     method: 'GET',
@@ -112,9 +101,8 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     const $ = cheerio.load(await res.text());
     const linknya = $('.calendar_event_attendance>a'); 
     const link_absen = [];
-    const tgl = [];
 
-    for(let i= 0; i < linknya.length ; i++){
+    for(let i= 0; i < linknya.length -1 ; i++){
       link_absen.push(linknya[i].attribs.href);
     }
 
@@ -216,7 +204,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     if(line === ''){
       continue;
     }
-      const nim = `E4118${line}`;
+      const nim = `E4119${line}`;
       const pass = 'jtipolije';
       const cookie = await getCookieLoginPage();
       const moodleSession = cookie.cookie[0].split(';')[0];
@@ -241,12 +229,12 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       
       const bisa_absen = [];
       
-      if(link_absen.length === 0){
+      if(arr_unique.length === 0){
         continue ;
       }
-      for(let i = 0; i < link_absen.length -1 ; i++){
-        const bisa = await cekAbsen(link_absen[i], moodleSession2);
-        if(bisa){
+      for(let i = 0; i <= arr_unique.length -1 ; i++){
+        const bisa = await cekAbsen(arr_unique[i], moodleSession2);
+        if(bisa !== false){
           bisa_absen.push(bisa);
         }
       }
@@ -257,10 +245,9 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         console.log('');
         continue ;
       }
-      
 
       console.log('[#] sedang mengabsen ...');
-      for(let i = 0; i < bisa_absen.length ; i++){
+      for(let i = 0; i <= bisa_absen.length -1 ; i++){
         const bahan_absen = await page_absen(bisa_absen[i], moodleSession2);
         const data = {
           sessid: bahan_absen.sessid,
@@ -273,11 +260,11 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         const gas_absen = await absen_action(data,moodleSession2);
         if(gas_absen.status == 200){
           console.log(`[#] ${seskey.nama} berhasil Absen`);
-          console.log('');
         } else {
           console.log(`[#] ${seskey.nama} gagal Absen`);
-          console.log('');
         }
       }
+      console.log('');
+
   }
 })();
