@@ -195,10 +195,10 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     body: `sessid=${data.sessid}&sesskey=${data.sesskey}&sesskey=${data.sesskey}&_qf__mod_attendance_student_attendance_form=${data.qfmod}&mform_isexpanded_id_session=${data.mform}&status=${data.status}&submitbutton=Save+changes`
   })
   .then(async res => {
-    const $ = cheerio.load(await res.text());
-    const link = $('table.generaltable.attwidth.boxaligncenter>tbody>tr.lastrow');
+    // const $ = cheerio.load(await res.text());
+    // const link = $('table.generaltable.attwidth.boxaligncenter>tbody>tr.lastrow');
 
-    resolve(link.children()[link.children().length -1].children[0].data);
+    resolve(await res);
   })  
   .catch(err => reject(err))
 }); 
@@ -216,7 +216,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     if(line === ''){
       continue;
     }
-      const nim = `E4119${line}`;
+      const nim = `E4118${line}`;
       const pass = 'jtipolije';
       const cookie = await getCookieLoginPage();
       const moodleSession = cookie.cookie[0].split(';')[0];
@@ -271,11 +271,11 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         }
   
         const gas_absen = await absen_action(data,moodleSession2);
-        if(gas_absen === 'Self-recorded'){
-          console.log(`[#] ${seskey.nama} berhasil absen`);
+        if(gas_absen.status == 200){
+          console.log(`[#] ${seskey.nama} berhasil Absen`);
           console.log('');
-        } else{
-          console.log(`[#] ${seskey.nama} gagal absen`);
+        } else {
+          console.log(`[#] ${seskey.nama} gagal Absen`);
           console.log('');
         }
       }
