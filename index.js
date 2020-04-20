@@ -99,10 +99,9 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
   })
   .then(async res => {
     const $ = cheerio.load(await res.text());
-    const linknya = $('.calendar_event_attendance>a'); 
+    const linknya = $('div.calendar_event_attendance>a'); 
     const link_absen = [];
-
-    for(let i= 0; i < linknya.length -1 ; i++){
+    for(let i= 0; i <= linknya.length -1 ; i++){
       link_absen.push(linknya[i].attribs.href);
     }
 
@@ -204,7 +203,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     if(line === ''){
       continue;
     }
-      const nim = `E4119${line}`;
+      const nim = `E4117${line}`;
       const pass = 'jtipolije';
       const cookie = await getCookieLoginPage();
       const moodleSession = cookie.cookie[0].split(';')[0];
@@ -222,14 +221,17 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       const seskey = await pageMy(moodleSession2);
       const link_absen = await eventPage(moodleSession2); 
       console.log(`[#] login sukses ${seskey.nama}`);
+
       const arr_unique = link_absen.filter(function(item, pos) {
         return link_absen.indexOf(item) == pos;
       });
+
       console.log(`[#] ketemu link absen : ${arr_unique.length}`);
       
       const bisa_absen = [];
       
       if(arr_unique.length === 0){
+        console.log('');
         continue ;
       }
       for(let i = 0; i <= arr_unique.length -1 ; i++){
