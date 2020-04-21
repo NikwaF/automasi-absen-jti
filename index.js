@@ -105,8 +105,24 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       link_absen.push(linknya[i].attribs.href);
     }
 
+    const tampung = [];
+    $('div.calendar_event_attendance>a').each(function(index,item){
+      const obj = {};
+      obj['link'] = $(this).attr('href'); 
+
+      if($(this).next('div').children('a').length){
+        obj['matkul'] = $(this).next('div').children('a').text();
+      } else{
+        obj['matkul'] = "gak tau";
+      }
+
+      $(this).parent().parent().children('.card-header').find('span.date.pull-xs-right').each(function(index2,item2){
+        obj['waktu'] = $(this).text();
+        tampung.push(obj);
+      });
+    });
     
-    resolve(link_absen)
+    resolve(tampung)
   })
   .catch(err => reject(err))  
  });
@@ -190,6 +206,20 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
   .catch(err => reject(err))
 }); 
 
+const removeDuplicates =  (originalArray, prop) => {
+  var newArray = [];
+  var lookupObject  = {};
+
+  for(var i in originalArray) {
+     lookupObject[originalArray[i][prop]] = originalArray[i];
+  }
+
+  for(i in lookupObject) {
+      newArray.push(lookupObject[i]);
+  }
+   return newArray;
+}  
+
 
 (async () => {
   const fileStream = fs.createReadStream(`${__dirname}/nim.txt`);
@@ -203,7 +233,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     if(line === ''){
       continue;
     }
-      const nim = `E4117${line}`;
+      const nim = line;
       const pass = 'jtipolije';
       const cookie = await getCookieLoginPage();
       const moodleSession = cookie.cookie[0].split(';')[0];
@@ -222,11 +252,10 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
       const link_absen = await eventPage(moodleSession2); 
       console.log(`[#] login sukses ${seskey.nama}`);
 
-      const arr_unique = link_absen.filter(function(item, pos) {
-        return link_absen.indexOf(item) == pos;
-      });
+      const arr_unique = removeDuplicates(link_absen,"link");
 
-      console.log(`[#] ketemu link absen : ${arr_unique.length}`);
+      console.log(`[#] ketemu link absen : ${arr_unique.length}\n${arr_unique.map((ele,ind) => `[#] ${ind+1}. matkul: ${ele.matkul} => ${ele.waktu}`).join('\n')}`);
+
       
       const bisa_absen = [];
       
@@ -235,7 +264,7 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
         continue ;
       }
       for(let i = 0; i <= arr_unique.length -1 ; i++){
-        const bisa = await cekAbsen(arr_unique[i], moodleSession2);
+        const bisa = await cekAbsen(arr_unique[i].link, moodleSession2);
         if(bisa !== false){
           bisa_absen.push(bisa);
         }
