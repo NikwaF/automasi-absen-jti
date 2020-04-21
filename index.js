@@ -45,24 +45,6 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
   .catch(err => reject(err))
 }); 
 
-
- const testSession = (url,cookie) => new Promise((resolve,reject) => {
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-      'Upgrade-Insecure-Requests': '1',
-      'Cookie': `${cookie}`
-    }
-  })
-  .then(res => {
-    res.text();
-  })
-  .then(res => resolve(res))
-  .catch(err => reject(err))
- });
-
  const pageMy = (cookie) => new Promise((resolve, reject) => {
   fetch('http://jti.polije.ac.id/elearning/my/', {
     method: 'GET',
@@ -247,14 +229,13 @@ const removeDuplicates =  (originalArray, prop) => {
       }
       
       const moodleSession2 = logins.cookie[0].split(';')[0];
-      await testSession(logins.url, moodleSession2);
       const seskey = await pageMy(moodleSession2);
       const link_absen = await eventPage(moodleSession2); 
       console.log(`[#] login sukses ${seskey.nama}`);
 
       const arr_unique = removeDuplicates(link_absen,"link");
 
-      console.log(`[#] ketemu link absen : ${arr_unique.length}\n${arr_unique.map((ele,ind) => `[#] ${ind+1}. matkul: ${ele.matkul} => ${ele.waktu}`).join('\n')}`);
+      console.log(`[#] ketemu link absen : ${arr_unique.length}\n${arr_unique.map((ele,ind) => `[#] ${ind+1}. matkul: ${ele.matkul}\n[#] ** waktu : ${ele.waktu}`).join('\n')}`);
 
       
       const bisa_absen = [];
@@ -296,6 +277,5 @@ const removeDuplicates =  (originalArray, prop) => {
         }
       }
       console.log('\n');
-
   }
 })();
