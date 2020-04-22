@@ -124,8 +124,13 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     const $ = cheerio.load(await res.text());
     const link = $('.statuscol.cell.c2.lastcol[colspan="3"]>a');
     // .attribs.href
-    if(link.length === 1){
-      resolve(link[0].attribs.href);
+    if(link.length !== 0){
+      const linknya = [];
+      $('.statuscol.cell.c2.lastcol[colspan="3"]>a').each(function(i,e){
+        linknya.push($(e).attr('href'));
+      });
+
+      resolve(linknya);
     } else{
       resolve(false);
     }
@@ -238,14 +243,16 @@ const removeDuplicates =  (originalArray, prop) => {
       console.log(`[#] ketemu link absen : ${arr_unique.length}\n${arr_unique.map((ele,ind) => `[#] ${ind+1}. matkul: ${ele.matkul}\n[#] ** waktu : ${ele.waktu}`).join('\n')}`);
 
       
-      const bisa_absen = [];
       
       if(arr_unique.length === 0){
         console.log('\n');
         continue ;
       }
+      const bisa_absen = [];
+      
       for(let i = 0; i <= arr_unique.length -1 ; i++){
         const bisa = await cekAbsen(arr_unique[i].link, moodleSession2);
+
         if(bisa !== false){
           bisa_absen.push(bisa);
         }
@@ -259,8 +266,9 @@ const removeDuplicates =  (originalArray, prop) => {
       }
 
       console.log('[#] sedang mengabsen ...');
-      for(let i = 0; i <= bisa_absen.length -1 ; i++){
-        const bahan_absen = await page_absen(bisa_absen[i], moodleSession2);
+
+      for(let i = 0; i <= bisa_absen[0].length -1 ; i++){
+        const bahan_absen = await page_absen(bisa_absen[0][i], moodleSession2);
         const data = {
           sessid: bahan_absen.sessid,
           sesskey: bahan_absen.sesskey,
