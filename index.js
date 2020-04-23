@@ -184,20 +184,15 @@ const login = (nim,pass,cookie,token) => new Promise((resolve,reject) => {
     },
     body: `sessid=${data.sessid}&sesskey=${data.sesskey}&sesskey=${data.sesskey}&_qf__mod_attendance_student_attendance_form=${data.qfmod}&mform_isexpanded_id_session=${data.mform}&status=${data.status}&submitbutton=Save+changes`
   })
-  .then(async res => {
-    // const $ = cheerio.load(await res.text());
-    // const link = $('table.generaltable.attwidth.boxaligncenter>tbody>tr.lastrow');
-
-    resolve(await res);
-  })  
+  .then(async res => resolve(await res))  
   .catch(err => reject(err))
 }); 
 
 const removeDuplicates =  (originalArray, prop) => {
-  var newArray = [];
-  var lookupObject  = {};
+  const newArray = [];
+  const lookupObject  = {};
 
-  for(var i in originalArray) {
+  for(const i in originalArray) {
      lookupObject[originalArray[i][prop]] = originalArray[i];
   }
 
@@ -267,21 +262,23 @@ const removeDuplicates =  (originalArray, prop) => {
 
       console.log('[#] sedang mengabsen ...');
 
-      for(let i = 0; i <= bisa_absen[0].length -1 ; i++){
-        const bahan_absen = await page_absen(bisa_absen[0][i], moodleSession2);
-        const data = {
-          sessid: bahan_absen.sessid,
-          sesskey: bahan_absen.sesskey,
-          qfmod: bahan_absen.qf_mod,
-          mform: bahan_absen.mform,
-          status: bahan_absen.status
-        }
-  
-        const gas_absen = await absen_action(data,moodleSession2);
-        if(gas_absen.status == 200){
-          console.log(`[#] ${seskey.nama} berhasil Absen`);
-        } else {
-          console.log(`[#] ${seskey.nama} gagal Absen`);
+      for(let i= 0; i <= bisa_absen.length -1; i++){
+        for(let j=0; j <= bisa_absen[i].length - 1; j++){
+          const bahan_absen = await page_absen(bisa_absen[i][j], moodleSession2);
+          const data = {
+            sessid: bahan_absen.sessid,
+            sesskey: bahan_absen.sesskey,
+            qfmod: bahan_absen.qf_mod,
+            mform: bahan_absen.mform,
+            status: bahan_absen.status
+          }
+
+          const gas_absen = await absen_action(data,moodleSession2);
+          if(gas_absen.status == 200){
+            console.log(`[#] ${seskey.nama} berhasil Absen`);
+          } else {
+            console.log(`[#] ${seskey.nama} gagal Absen`);
+          }          
         }
       }
       console.log('\n');
