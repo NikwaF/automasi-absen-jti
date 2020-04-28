@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const readline = require('readline');
+const delay = require('delay');
 
 const getCookieLoginPage = () => new Promise((resolve,reject) => {
   fetch('http://jti.polije.ac.id/elearning/login/index.php', {
@@ -225,6 +226,7 @@ const removeDuplicates =  (originalArray, prop) => {
   
       if(logins.cookie === undefined){
         console.log(`[#] ${nim} login gagal\n`);
+        delay(2000);
         continue;
       }
       
@@ -241,6 +243,7 @@ const removeDuplicates =  (originalArray, prop) => {
       
       if(arr_unique.length === 0){
         console.log('\n');
+        await delay(2000);
         continue ;
       }
       const bisa_absen = [];
@@ -257,6 +260,7 @@ const removeDuplicates =  (originalArray, prop) => {
 
       if(bisa_absen.length === 0){
         console.log('\n');
+        await delay(2000);
         continue ;
       }
 
@@ -281,6 +285,7 @@ const removeDuplicates =  (originalArray, prop) => {
           }          
         }
       }
+      await delay(2000);
       console.log('\n');
   }
 })();
